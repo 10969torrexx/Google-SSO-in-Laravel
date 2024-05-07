@@ -14,10 +14,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/login/google', function () {
     return Socialite::driver('google')->redirect();
-});
+})->name('redirectToGoogle');
 
 Route::get('/login/google/callback', function () {
     $user = Socialite::driver('google')->user();
-    // Handle the authenticated user
-    // For example, create a new user if it doesn't exist or log in the existing user
+    dd($user);
 });
