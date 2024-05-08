@@ -82,7 +82,7 @@
 </div>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-      function decodeJwtResponse(token) {
+    function decodeJwtResponse(token) {
         let base64Url = token.split('.')[1]
         let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -91,7 +91,7 @@
         return JSON.parse(jsonPayload)
     }
 
-      window.onSignIn = googleUser => {
+    window.onSignIn = googleUser => {
 
         var user = decodeJwtResponse(googleUser.credential);
 
@@ -109,7 +109,7 @@
         }else{
           $("#loginmsg").html("<div class = 'alert alert-danger'>You have no institutional account registered.</div>");
         }
-      }
+    }
 </script>
 
 @endsection
