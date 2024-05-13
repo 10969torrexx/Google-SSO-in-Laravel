@@ -43,11 +43,12 @@
         </div>
         <div class="col-md-4">
           <div class="card shadow-sm">
-            <div class="card-header">Add Departments</div>
+            <div class="card-header" id="card_header">Add Departments</div>
             <div class="card-body">
               <form action="{{ route('addDepartments') }}" method="POST" id="department_form"> @csrf
                 <div class="form-group mb-2">
                   <label for="">Department name</label>
+                  <input type="text" value="" name="id" class="form-control d-none" id="department_id">
                   <input id="department_name" type="text" class="form-control @error('department_name') is-invalid @enderror" name="department_name" value="{{ old('department_name') }}" required autocomplete="email">
                     @error('department_name')
                         <span class="invalid-feedback" role="alert">
@@ -56,7 +57,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                  <button class="btn btn-primary col-12" type="submit">
+                  <button class="btn btn-primary col-12" id="submit_btn" type="submit">
                     Add Department
                   </button>
                 </div>
@@ -83,6 +84,9 @@
           if (response.status == 200) {
             console.log(response.data[0]['department_name']);
             $("#department_form").attr("action", `{{ route("editDepartments") }}`);
+            $('#submit_btn').text('Edit Department');
+            $('#card_header').text('Edit Department');
+            $('#department_id').val(response.data[0]['id']);
             $('#department_name').val(response.data[0]['department_name']);
           }
         },
