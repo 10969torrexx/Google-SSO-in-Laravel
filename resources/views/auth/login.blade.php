@@ -12,11 +12,8 @@
                     <h4 class="text-center">Welcome to CES!</h4>
                 </div>
                 <div class="mt-2 text-center">
-                    <div id="g_id_onload"
-                        data-client_id="{{ env('GOOGLE_CLIENT_ID') }}"
-                        data-callback="onSignIn">
-                    </div>
-                     <div class="g_id_signin form-control" data-type="standard"></div>
+                    <div id="g_id_onload" data-client_id="{{env('GOOGLE_CLIENT_ID')}}" data-callback="onSignIn"></div>
+                    <div class="g_id_signin form-control" data-type="standard"></div>
                 </div>
                 </div>
                 <form method="POST" action="{{ route('login') }}">
@@ -80,36 +77,49 @@
         </div>
     </div>
 </div>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src = "https://accounts.google.com/gsi/client" async defer></script>
 <script>
-    function decodeJwtResponse(token) {
-        let base64Url = token.split('.')[1]
-        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload)
+    function decodeJwtResponse(token){
+       let base64url = token.split('.')[1];
+       let base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+       let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) { 
+           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+       }).join(''));
+       return JSON.parse(jsonPayload);
     }
-
-    window.onSignIn = googleUser => {
-
-        var user = decodeJwtResponse(googleUser.credential);
-
-        if(user){
-          // signOut();
-          $.ajax({
-              url: '/auth/sso',
-              method: 'post',
-              data: {email : user.email},
-              beforeSend:function(){},
-              success:function(response){
-                console.log(response);
-              }
-          });
-        }else{
-          $("#loginmsg").html("<div class = 'alert alert-danger'>You have no institutional account registered.</div>");
-        }
-    }
-</script>
+   
+    window.onSignIn = googleUser =>{
+       var user = decodeJwtResponse(googleUser.credential);
+       if(user){
+           $.ajaxSetup({
+           headers: {  'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') }
+           });
+   
+           $.ajax({
+               url: '/googleAuth',
+               method: 'POST',
+               data: {email: user.email},
+               beforeSend: function(){
+                   $('#btnLogin').html("REDIRECTING...").prop("disabled", true);
+               },
+               success:function(response){
+   
+                   $('#btnLogin').html("SIGN IN").prop("disabled", false);
+                   if(response == "success"){
+                       $('#errormessage').text("Login successfully").css("color", "green"); 
+                       window.location.href = "/dashboard";
+                   }
+                   else {
+                       $('#errormessage').text("Unauthorized account").css("color", "red");
+                   }
+   
+               },
+               error:function(xhr, status, error){
+                 alert(xhr.responseJSON.message);
+               }
+           });
+       }
+   }
+   </script>
 
 @endsection

@@ -22,3 +22,4 @@ Route::post('/login/google/callback', function () {
         'user' => $user
     ));
 });
+ 
