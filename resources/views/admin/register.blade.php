@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Register | Human Resources Mangement System')
+@section('title', 'Admin Register | Human Resources Mangement System')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -44,7 +44,7 @@
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
+                                <input type="number" name="role" value="1" class="form-control d-none">
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
