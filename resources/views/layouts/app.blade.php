@@ -26,6 +26,9 @@
         border: 0px !important;
         border-radius: 5%;
     }
+    .card-header {
+        background-color: transparent;
+    }
     .center-screen {
       position: fixed;
       top: 50%;
@@ -76,6 +79,7 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item {{ Auth::user()->role == 0 ? 'd-none' : '' }}" href="{{ route('departments') }}">Departments</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

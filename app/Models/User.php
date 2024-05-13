@@ -20,7 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'google_sso_flg'
+        'google_sso_flg',
+        'role'
     ];
 
     /**
