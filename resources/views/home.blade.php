@@ -8,11 +8,13 @@
                 <div class="card-header">{{ __('Dashboard') }}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                    <div class="row justify-content-center">
+                        <div class="form-group">
+                            <p>Name: {{ Auth::user()->name }}</p>
+                            <p>Email: {{ Auth::user()->email }}</p>
+                            <p>Department: {{ !empty($user[0]->department_name) ? $user[0]->department_name : 'Not yet assigned' }}</p>
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>

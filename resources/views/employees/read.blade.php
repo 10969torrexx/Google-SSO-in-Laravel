@@ -30,7 +30,7 @@
                                   <td>{{ $loop->iteration }}</td>
                                   <td>{{ $item->name }}</td>
                                   <td>{{ $item->email }}</td>
-                                  <td>{{ isset($departments[$item->department]) ? $departments[$item->department]['department_name'] : 'Not yet assigned' }}</td>
+                                  <td>{{ empty($item->department_name) ? $item->department_name : 'Not yet registered' }}</td>
                                   <td>{{ date('Y-m-d', $item->created) }}</td>
                                   <td>
                                     <a type="button" data-id="{{ $item->id }}" id="edit" class="btn btn-primary btn-sm mr-2">Edit</a>
