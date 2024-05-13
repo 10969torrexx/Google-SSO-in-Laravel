@@ -39,7 +39,7 @@
                             @endif
                           <!-- Add more rows as needed -->
                         </tbody>
-                      </table>
+                    </table>
                 </div>
             </div>
         </div>

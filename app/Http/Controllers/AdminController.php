@@ -102,8 +102,11 @@ class AdminController extends Controller
     public function employees() {
         $isValidUser = (Auth::user()->toArray()['role'] == 1) ? true : false;
         if($isValidUser == true) {
-            $employees = User::where('role', 0)->get();
             $departments = Departments::get();
+            $employees = User::join('departments', 'users.department', '=', 'departments.id')
+            ->select('users.*', 'departments.*')
+            ->where('users.role', 0)
+            ->get();
             return view('employees.read', 
                 compact('employees', 'departments')
             );
