@@ -24,6 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->role == 1) {
+           return redirect(route('departments'));
+        }
         return view('home');
     }
 }
