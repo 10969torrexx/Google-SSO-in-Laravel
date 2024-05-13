@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class GoogleHandlerContoller extends Controller
@@ -34,20 +35,21 @@ class GoogleHandlerContoller extends Controller
             if ($response) {
                 return response()->json(array(
                     'status' => 200,
-                    'message' => 'account created!'
+                    'message' => 'Account created!',
+                    'account' => $ifUserExists
                 ));
             }
             return response()->json(array(
                 'status' => 400,
-                'message' => 'failed to create account'
+                'message' => 'Failed to create account!'
             ));
         } 
-
+        Auth::login($ifUserExists);
         return response()->json(array(
-            'status' => 400,
-            'message' => 'User already exists'
+            'status' => 200,
+            'message' => 'Account created!',
+            'account' => $ifUserExists
         ));
-       
     }
 
     /**

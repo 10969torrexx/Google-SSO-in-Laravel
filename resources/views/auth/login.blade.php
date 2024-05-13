@@ -11,6 +11,7 @@
                     <img src="{{ asset('slsu_logo.png') }}" style="width: 200px;" class="mb-3">
                     <h4 class="text-center">Welcome to HRMS!</h4>
                 </div>
+                <div class="p-1" id="alertMessage"></div>
                 <div class="mt-2 text-center">
                     <div id="g_id_onload" data-client_id="{{env('GOOGLE_CLIENT_ID')}}" data-callback="onSignIn"></div>
                     <div class="g_id_signin form-control" data-type="standard"></div>
@@ -52,7 +53,7 @@
 
                     <div class="row justify-content-center">
                         <div class="col-md-8">
-                            <button type="submit" class="btn btn-primary col-12 mb-2">
+                            <button type="submit" class="btn btn-primary col-12 mb-2" id="btnLogin">
                                 {{ __('Login') }}
                             </button>
                             <a href="/register" class="btn btn-secondary col-12">Register</a>
@@ -90,15 +91,19 @@
                beforeSend: function(){
                    $('#btnLogin').html("REDIRECTING...").prop("disabled", true);
                },
-               success:function(response){
-                console.log(response);
-               },
-               error:function(xhr, status, error){
-                 alert(xhr.responseJSON.message);
-               }
+                success:function(response){
+                    if (response.status == 400 || response.status == 200) {
+                        $('#btnLogin').html("Login").prop("disabled", false);
+                        window.location.href ="/home";
+                    }
+                },
+                error:function(xhr, status, error){
+                    alert(xhr.responseJSON.message);
+                }
             });
         }
     }
+
    </script>
 
 @endsection
