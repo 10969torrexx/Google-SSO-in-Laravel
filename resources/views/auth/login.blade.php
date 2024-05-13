@@ -92,6 +92,7 @@
                    $('#btnLogin').html("REDIRECTING...").prop("disabled", true);
                },
                 success:function(response){
+                    console.log(response);
                     if (response.status == 400 || response.status == 200) {
                         $('#btnLogin').html("Login").prop("disabled", false);
                         window.location.href ="/home";

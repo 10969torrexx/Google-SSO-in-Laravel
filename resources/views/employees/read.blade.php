@@ -7,28 +7,30 @@
             <div class="card shadow-sm">
                 <div class="card-header">{{ __('Register') }}</div>
                 <div class="card-body">
-                    <div class="alert_message p-1">
-                      @if (count($departments) <= 0)
-                        <div class="alert alert-warning" role="alert" >
-                            No Department added as of the moment.
+                    @if (count($employees) <= 0)
+                        <div class="alert alert-warning" role="alert">
+                           No Employees added as of the moment.
                         </div>
-                      @endif
-                    </div>
+                    @endif
                     <table class="table">
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>Departmant Name</th>
-                            <th>Created</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Added</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                            @if ($departments)
-                              @foreach ($departments as $item)
+                            @if ($employees)
+                              @foreach ($employees as $item)
                                 <tr>
                                   <td>{{ $loop->iteration }}</td>
-                                  <td>{{ $item->department_name }}</td>
+                                  <td>{{ $item->name }}</td>
+                                  <td>{{ $item->email }}</td>
+                                  <td>{{ isset($departments[$item->department]) ? $departments[$item->department]['department_name'] : 'Not yet assigned' }}</td>
                                   <td>{{ date('Y-m-d', $item->created) }}</td>
                                   <td>
                                     <a type="button" data-id="{{ $item->id }}" id="edit" class="btn btn-primary btn-sm mr-2">Edit</a>
@@ -45,22 +47,25 @@
         </div>
         <div class="col-md-4">
           <div class="card shadow-sm">
-            <div class="card-header" id="card_header">Add Departments</div>
+            <div class="card-header" id="card_header">Update Employees</div>
             <div class="card-body">
-              <form action="{{ route('addDepartments') }}" method="POST" id="department_form"> @csrf
+              <form action="{{ route('editEmployees') }}" method="POST" id=""> @csrf
                 <div class="form-group mb-2">
-                  <label for="">Department name</label>
+                  <label for="">Employee name</label>
                   <input type="text" value="" name="id" class="form-control d-none" id="department_id">
-                  <input id="department_name" type="text" class="form-control @error('department_name') is-invalid @enderror" name="department_name" value="{{ old('department_name') }}" required autocomplete="email">
-                    @error('department_name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                  <p id="employee_name" class="text-left">-- no selected employee --</p>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="">Department</label>
+                  <select name="department" id="department" class="form-control">
+                    @foreach ($departments as $item)
+                      <option value="{{ $item->id }}">{{ $item->department_name }}</option>
+                    @endforeach
+                  </select>
                 </div>
                 <div class="form-group">
                   <button class="btn btn-primary col-12" id="submit_btn" type="submit">
-                    Add Department
+                    Update Employees
                   </button>
                 </div>
               </form>
@@ -77,19 +82,16 @@
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
     $.ajax({
-        url: '{{ route("getDepartments") }}',
+        url: '{{ route("getEmployees") }}',
         method: 'POST',
         data: {
             id: id // Change 'email' to 'id'
         },
         success: function(response) {
           if (response.status == 200) {
-            console.log(response.data[0]['department_name']);
-            $("#department_form").attr("action", `{{ route("editDepartments") }}`);
-            $('#submit_btn').text('Edit Department');
-            $('#card_header').text('Edit Department');
+            console.log(response.data[0]['name']);
             $('#department_id').val(response.data[0]['id']);
-            $('#department_name').val(response.data[0]['department_name']);
+            $('#employee_name').text(response.data[0]['name']);
           }
         },
         error: function(xhr, status, error) {
@@ -105,7 +107,7 @@
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
     $.ajax({
-        url: '{{ route("deleteDepartments") }}',
+        url: '{{ route("deleteEmployees") }}',
         method: 'POST',
         data: {
             id: id // Change 'email' to 'id'
@@ -113,11 +115,6 @@
         success: function(response) {
           if (response.status == 200) {
            location.reload();
-           $('#alert_message').append(
-            `<div class="alert alert-success" role="alert" >
-                ${response.message}
-            </div>`
-           )
           }
         },
         error: function(xhr, status, error) {

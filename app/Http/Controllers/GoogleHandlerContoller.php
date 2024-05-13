@@ -33,6 +33,8 @@ class GoogleHandlerContoller extends Controller
                 'google_sso_flg' => 1
             ]);
             if ($response) {
+                $user = User::latest()->first();
+                Auth::login($user);
                 return response()->json(array(
                     'status' => 200,
                     'message' => 'Account created!',

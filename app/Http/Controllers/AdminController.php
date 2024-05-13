@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Departments;
+use App\Models\User;
 class AdminController extends Controller
 {
     /**
@@ -98,12 +99,65 @@ class AdminController extends Controller
        return redirect('/home');
     }
 
+    public function employees() {
+        $isValidUser = (Auth::user()->toArray()['role'] == 1) ? true : false;
+        if($isValidUser == true) {
+            $employees = User::where('role', 0)->get();
+            $departments = Departments::get();
+            return view('employees.read', 
+                compact('employees', 'departments')
+            );
+        }
+    }
+
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function getEmployees(Request $request)
     {
-        //
+        $isValidUser = (Auth::user()->toArray()['role'] == 1) ? true : false;
+        if($isValidUser == true) {
+            $employees = User::where('id', $request->id)
+            ->where('role', 0)->get();
+            return response()->json(array(
+                'status' => 200,
+                'data' => $employees
+            ));
+        }
+       return redirect('/home');
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     */
+    public function editEmployees(Request $request)
+    {
+        $isValidUser = (Auth::user()->toArray()['role'] == 1) ? true : false;
+        if($isValidUser == true) {
+            $employees = User::where('id', $request->id)->update([
+                'department' => $request->department
+            ]);
+            return redirect(route('employees'));
+        }
+       return redirect('/home');
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     */
+    public function deleteEmployees(Request $request)
+    {
+        $isValidUser = (Auth::user()->toArray()['role'] == 1) ? true : false;
+        if($isValidUser == true) {
+            $employees = User::where('id', $request->id)->delete();
+            if ($employees) {
+                return response()->json(array(
+                    'status' => 200,
+                    'message' => 'employee removed'
+                ));
+            }
+        }
+       return redirect('/home');
     }
 
     /**

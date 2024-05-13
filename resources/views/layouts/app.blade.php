@@ -24,7 +24,8 @@
     .card {
         padding: 20px;
         border: 0px !important;
-        border-radius: 5%;
+        border-radius: 10px;
+        
     }
     .card-header {
         background-color: transparent;
@@ -80,6 +81,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item {{ Auth::user()->role == 0 ? 'd-none' : '' }}" href="{{ route('departments') }}">Departments</a>
+                                    <a class="dropdown-item {{ Auth::user()->role == 0 ? 'd-none' : '' }}" href="{{ route('employees') }}">Employees</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
